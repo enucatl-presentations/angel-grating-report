@@ -1,0 +1,54 @@
+require "csv"
+require "rake/clean"
+
+datasets = CSV.table "datasets.csv"
+
+def reconstructed_from_raw sample, flat
+  file1 = File.basename(sample, ".*")
+  file2 = File.basename(flat, ".*")
+  dir = File.dirname(sample)
+  File.join(dir, "#{file1}_#{file2}.h5")
+end
+
+def visibility_png path
+  File.basename(path, ".*") + "_visibility.png"
+end
+
+def absorption_png path
+  File.basename(path, ".*") + "_absorption.png"
+end
+
+datasets[:reconstructed] = datasets[:path].map {|f| reconstructed_from_raw(f, f)}
+datasets[:visibility] = datasets[:reconstructed].map {|f| visibility_png(f)}
+datasets[:absorption] = datasets[:reconstructed].map {|f| absorption_png(f)}
+
+namespace :reconstruction do
+
+  datasets.each do |row|
+    reconstructed = row[:reconstructed]
+    CLEAN.include(reconstructed)
+
+    desc "dpc_reconstruction of #{reconstructed}"
+    file reconstructed => row[:path] do |f|
+      Dir.chdir "../../../../code/dpc_reconstruction" do
+        sh "dpc_radiography --drop_last --group /entry/data #{f.source} #{f.source}"
+      end
+    end
+
+    desc "visibility map of #{row[:visibility]}"
+    file row[:visibility] => ["save_fig.py", reconstructed] do |f|
+      p row[:name]
+      sh "python #{f.source} #{f.prerequisites[1]} --big_crop 350 750 600 1000 --dataset_name postprocessing/visibility --output #{f.name}"
+    end
+
+    desc "absorption map of #{row[:absorption]}"
+    file row[:absorption] => ["save_fig.py", reconstructed] do |f|
+      sh "python #{f.source} #{f.prerequisites[1]} --big_crop 350 750 600 1000 --dataset_name postprocessing/phase_stepping_curves --output #{f.name}"
+    end
+
+  end
+
+  desc "all pictures"
+  task :all => datasets[:visibility] + datasets[:absorption]
+
+end
