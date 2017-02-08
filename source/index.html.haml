@@ -3,8 +3,69 @@ title: Welcome to Middleman-Haml-Bootstrap-Sass
 ---
 
 .starter-template
-  %h1 Bootstrap starter template
-  %p.lead
-    Use this document as a way to quickly start any new project.
-    %br/
-    All you get is this text and a mostly barebones HTML document.
+  %h1 Testing new grating setups
+  .div.text-left
+    %p
+      G0 and G1 are fixed, and are the same as in the previous experiments that we ran in the Summer.
+      %a{href: "https://enucatl-presentations.github.io/2016.08.23.progress.report/#/3/1"} This achieved about 15% median visibility.
+    %p
+      G0 is 1172-3.
+    %p
+      G1 is 1093-6.
+    %p
+      The new absorption gratings are tested for their performance as G2's in the following. The detector is the Eiger 1M with a silicon sensor, tube settings: 100 kVp, 6 mA, 1 mm focal spot.
+      10 phase steps, 1 s exposure per step.
+    %p
+      A visibility map is show for each of the new gratings, with an
+      absorption map besides. Strong deformations in the golden structures are
+      seen in 1706 and 1707, which make those probably unfit for imaging
+      altogether. Minor defects are visible in 1638 and similar punctures
+      appear in a somewhat more sever amounts in 1629. 1651 on the other hand
+      achieved very good uniformity.
+    %p
+      Matteo Abis
+  .col-md-12
+    %h2 1629
+    .div
+      .col-md-6
+        %p.lead visibility (median=10.7%)
+        = image_tag "series.170207.140151167258_series.170207.140151167258_visibility.png", class: "img img-responsive"
+      .col-md-6
+        %p.lead absorption
+        = image_tag "series.170207.140151167258_series.170207.140151167258_absorption.png", class: "img img-responsive"
+  .col-md-12
+    %h2 1638
+    .div
+      .col-md-6
+        %p.lead visibility (median=11.1%)
+        = image_tag "series.170207.151011510767_series.170207.151011510767_visibility.png", class: "img img-responsive"
+      .col-md-6
+        %p.lead absorption
+        = image_tag "series.170207.151011510767_series.170207.151011510767_absorption.png", class: "img img-responsive"
+  .col-md-12
+    %h2 1651
+    .div
+      .col-md-6
+        %p.lead visibility (median=11.3%)
+        = image_tag "series.170207.154648325984_series.170207.154648325984_visibility.png", class: "img img-responsive"
+      .col-md-6
+        %p.lead absorption
+        = image_tag "series.170207.154648325984_series.170207.154648325984_absorption.png", class: "img img-responsive"
+  .col-md-12
+    %h2 1706
+    .div
+      .col-md-6
+        %p.lead visibility (median=10.2%)
+        = image_tag "series.170207.161152530567_series.170207.161152530567_visibility.png", class: "img img-responsive"
+      .col-md-6
+        %p.lead absorption
+        = image_tag "series.170207.161152530567_series.170207.161152530567_absorption.png", class: "img img-responsive"
+  .col-md-12
+    %h2 1707
+    .div
+      .col-md-6
+        %p.lead visibility (median=11.2%)
+        = image_tag "series.170207.163004645883_series.170207.163004645883_absorption.png", class: "img img-responsive"
+      .col-md-6
+        %p.lead absorption
+        = image_tag "series.170207.163004645883_series.170207.163004645883_visibility.png", class: "img img-responsive"
