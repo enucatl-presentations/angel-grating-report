@@ -18,9 +18,14 @@ def absorption_png path
   File.basename(path, ".*") + "_absorption.png"
 end
 
+def singlegrating_png path
+  File.basename(path, ".*") + "_singlegrating.png"
+end
+
 datasets[:reconstructed] = datasets[:path].map {|f| reconstructed_from_raw(f, f)}
 datasets[:visibility] = datasets[:reconstructed].map {|f| visibility_png(f)}
 datasets[:absorption] = datasets[:reconstructed].map {|f| absorption_png(f)}
+datasets[:singlegrating] = datasets[:single].map {|f| singlegrating_png(f)}
 
 namespace :reconstruction do
 
@@ -35,20 +40,24 @@ namespace :reconstruction do
       end
     end
 
-    desc "visibility map of #{row[:visibility]}"
+    desc "visibility map of #{row[:name]}"
     file row[:visibility] => ["save_fig.py", reconstructed] do |f|
-      p row[:name]
-      sh "python #{f.source} #{f.prerequisites[1]} --big_crop 350 750 600 1000 --dataset_name postprocessing/visibility --output #{f.name}"
+      sh "python #{f.source} #{f.prerequisites[1]} --big_crop 350 750 600 1000 --dataset_name postprocessing/visibility --output #{row[:name]}_#{f.name}"
     end
 
-    desc "absorption map of #{row[:absorption]}"
+    desc "single grating absorption picture of #{row[:name]}"
+    file row[:singlegrating] => ["save_fig.py", row[:single]] do |f|
+      sh "python #{f.source} #{f.prerequisites[1]} --big_crop 150 1000 400 1000 --dataset_name entry/data/data_000001 --output #{row[:name]}_#{f.name}"
+    end
+
+    desc "absorption map of #{row[:name]}"
     file row[:absorption] => ["save_fig.py", reconstructed] do |f|
-      sh "python #{f.source} #{f.prerequisites[1]} --big_crop 350 750 600 1000 --dataset_name postprocessing/phase_stepping_curves --output #{f.name}"
+      sh "python #{f.source} #{f.prerequisites[1]} --big_crop 350 750 600 1000 --dataset_name postprocessing/phase_stepping_curves --output #{row[:name]}_#{f.name}"
     end
 
   end
 
   desc "all pictures"
-  task :all => datasets[:visibility] + datasets[:absorption]
+  task :all => datasets[:visibility] + datasets[:absorption] + datasets[:singlegrating]
 
 end
