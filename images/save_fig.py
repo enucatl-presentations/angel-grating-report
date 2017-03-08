@@ -24,7 +24,7 @@ def main(filename, dataset_name, big_crop, output):
         print("median_vis = ", median_visibility)
     plt.figure()
     limits = stats.mstats.mquantiles(
-        dataset,
+        dataset[dataset < 4e9],
         prob=[0.02, 0.98])
     print(limits)
     image = plt.imshow(
